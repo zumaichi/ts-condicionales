@@ -1,0 +1,220 @@
+import "./style.css";
+
+let puntuacion = 0;
+
+const calcularNumeroAleatorio = () => Math.floor(Math.random() * 10) + 1;
+
+const obtenerValorCarta = (numeroAleatorio: number) =>
+  numeroAleatorio > 7 ? 0.5 : numeroAleatorio;
+
+const obtenerValorUrlCarta = (numeroAleatorio: number) =>
+  numeroAleatorio > 7 ? numeroAleatorio + 2 : numeroAleatorio;
+
+const cartaUrl = (numeroAleatorio?: number) => {
+  switch (numeroAleatorio) {
+    case 1:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/1_as-copas.jpg";
+
+    case 2:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/2_dos-copas.jpg";
+
+    case 3:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/3_tres-copas.jpg";
+
+    case 4:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/4_cuatro-copas.jpg";
+
+    case 5:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/5_cinco-copas.jpg";
+
+    case 6:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/6_seis-copas.jpg";
+
+    case 7:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/7_siete-copas.jpg";
+
+    case 10:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/10_sota-copas.jpg";
+
+    case 11:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/11_caballo-copas.jpg";
+
+    case 12:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/copas/12_rey-copas.jpg";
+
+    default:
+      return "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/back.jpg";
+  }
+};
+
+const muestraCarta = (numeroAleatorio?: number) => {
+  const imagen = document.getElementById("imagenCarta");
+  const carta = cartaUrl(numeroAleatorio);
+  if (
+    imagen !== null &&
+    imagen !== null &&
+    imagen instanceof HTMLImageElement
+  ) {
+    imagen.src = carta;
+  } else {
+    console.error("No se ha encontrado la imagen");
+  }
+};
+
+const aumentarPuntuacion = (valor: number) => {
+  puntuacion += valor;
+
+  const puntuacionElemento = document.getElementById("puntuacion");
+  if (puntuacionElemento !== null) {
+    puntuacionElemento.innerHTML = `${puntuacion}`;
+  } else {
+    console.error("No se ha encontrado el elemento de puntuación");
+  }
+};
+
+const pedirCarta = () => {
+  const numeroAleatorio = calcularNumeroAleatorio();
+
+  const valorNuevaCarta = obtenerValorCarta(numeroAleatorio);
+  aumentarPuntuacion(valorNuevaCarta);
+
+  const valorUrlCarta = obtenerValorUrlCarta(numeroAleatorio);
+
+  muestraCarta(valorUrlCarta);
+  console.log("puntuacion: ", puntuacion);
+
+  if (puntuacion >= 7.5) {
+    pintarMensajePantalla(puntuacion);
+    deshabilitarBotones();
+  }
+};
+
+const deshabilitarBotones = () => {
+  const botonDarCartaContenedor = document.getElementById("botonDarCarta");
+  const botonPlantarseContenedor = document.getElementById("botonPlantarse");
+  if (
+    botonDarCartaContenedor &&
+    botonDarCartaContenedor instanceof HTMLButtonElement &&
+    botonPlantarseContenedor &&
+    botonPlantarseContenedor instanceof HTMLButtonElement
+  ) {
+    botonDarCartaContenedor.disabled = true;
+    botonPlantarseContenedor.disabled = true;
+  }
+};
+
+const habilitarBotones = () => {
+  const botonDarCartaContenedor = document.getElementById("botonDarCarta");
+  const botonPlantarseContenedor = document.getElementById("botonPlantarse");
+  if (
+    botonDarCartaContenedor &&
+    botonDarCartaContenedor instanceof HTMLButtonElement &&
+    botonPlantarseContenedor &&
+    botonPlantarseContenedor instanceof HTMLButtonElement
+  ) {
+    botonDarCartaContenedor.disabled = false;
+    botonPlantarseContenedor.disabled = false;
+  }
+};
+
+const obtenerMensaje = (puntuacion: number): string => {
+  let mensaje = "";
+  if (puntuacion >= 0.5 && puntuacion <= 4) {
+    mensaje = "Has sido muy conservador.";
+  } else if (puntuacion === 5) {
+    mensaje = "Te ha entrado el canguelo eh?";
+  } else if (puntuacion >= 6 && puntuacion < 7.5) {
+    mensaje = "Casi casi...";
+  } else if (puntuacion === 7.5) {
+    mensaje = "¡Lo has clavado! ¡Enhorabuena!";
+  } else if (puntuacion > 7.5) {
+    mensaje = "Game Over";
+  } else if (puntuacion === 0) {
+    mensaje = "¡pulsa dame cata para empezar!";
+  }
+
+  return mensaje;
+};
+
+const pintarMensajePantalla = (puntuacion: number) => {
+  const mensajeContenedor = document.getElementById("mensaje");
+
+  if (
+    mensajeContenedor !== null &&
+    mensajeContenedor !== undefined &&
+    mensajeContenedor instanceof HTMLDivElement
+  ) {
+    const mensaje = obtenerMensaje(puntuacion);
+    mensajeContenedor.textContent = mensaje;
+  } else {
+    console.error("No se ha encontrado el contenedor de mensaje");
+  }
+};
+
+const plantarse = (puntuacion: number) => {
+  const mensajeFinal = document.getElementById("mensaje");
+  if (mensajeFinal !== null) {
+    if (puntuacion >= 0.5 && puntuacion <= 4) {
+      mensajeFinal.innerHTML = "Has sido muy conservador.";
+    } else if (puntuacion === 5) {
+      mensajeFinal.innerHTML = "Te ha entrado el canguelo eh?";
+    } else if (puntuacion >= 6 && puntuacion < 7.5) {
+      mensajeFinal.innerHTML = "Casi casi...";
+    } else if (puntuacion === 7.5) {
+      mensajeFinal.innerHTML = "¡Lo has clavado! ¡Enhorabuena!";
+    } else if (puntuacion > 7.5) {
+      mensajeFinal.innerText = "Game Over";
+    } else {
+      mensajeFinal.innerHTML = "¡pulsa dame cata para empezar!";
+    }
+  }
+};
+const reinicio = () => {
+  puntuacion = 0;
+  habilitarBotones();
+  muestraCarta();
+  pintarMensajePantalla(puntuacion);
+};
+
+const cargarEventos = () => {
+  const botonDarCarta = document.getElementById("botonDarCarta");
+
+  if (
+    botonDarCarta !== null &&
+    botonDarCarta !== undefined &&
+    botonDarCarta instanceof HTMLButtonElement
+  ) {
+    botonDarCarta.addEventListener("click", pedirCarta);
+  } else {
+    console.error("error al dar una carta");
+  }
+  const botonPlantarse = document.getElementById("botonPlantarse");
+
+  if (
+    botonPlantarse !== null &&
+    botonPlantarse !== undefined &&
+    botonPlantarse instanceof HTMLButtonElement
+  ) {
+    botonPlantarse.addEventListener("click", () => plantarse(puntuacion));
+  } else {
+    console.error("error al plantarte");
+  }
+
+  const botonReinicio = document.getElementById("botonReinicio");
+
+  if (
+    botonReinicio !== null &&
+    botonReinicio !== undefined &&
+    botonReinicio instanceof HTMLButtonElement
+  ) {
+    botonReinicio.addEventListener("click", reinicio);
+  } else {
+    console.error("error al plantarte");
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarEventos();
+  muestraCarta();
+  pintarMensajePantalla(puntuacion);
+});
