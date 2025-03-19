@@ -82,38 +82,54 @@ const pedirCarta = () => {
 
   muestraCarta(valorUrlCarta);
   console.log("puntuacion: ", puntuacion);
+  pintarMensajePantalla(puntuacion);
 
   if (puntuacion >= 7.5) {
     pintarMensajePantalla(puntuacion);
     deshabilitarBotones();
   }
 };
-
+const activarReinicio = () => {
+  const botonReinicioContenedor = document.getElementById("botonReinicio");
+  if (
+    botonReinicioContenedor &&
+    botonReinicioContenedor instanceof HTMLButtonElement
+  )
+    botonReinicioContenedor.disabled = false;
+};
 const deshabilitarBotones = () => {
   const botonDarCartaContenedor = document.getElementById("botonDarCarta");
   const botonPlantarseContenedor = document.getElementById("botonPlantarse");
+  const botonReinicioContenedor = document.getElementById("botonReinicio");
   if (
     botonDarCartaContenedor &&
     botonDarCartaContenedor instanceof HTMLButtonElement &&
     botonPlantarseContenedor &&
-    botonPlantarseContenedor instanceof HTMLButtonElement
+    botonPlantarseContenedor instanceof HTMLButtonElement &&
+    botonReinicioContenedor &&
+    botonReinicioContenedor instanceof HTMLButtonElement
   ) {
     botonDarCartaContenedor.disabled = true;
     botonPlantarseContenedor.disabled = true;
+    botonReinicioContenedor.disabled = false;
   }
 };
 
 const habilitarBotones = () => {
   const botonDarCartaContenedor = document.getElementById("botonDarCarta");
   const botonPlantarseContenedor = document.getElementById("botonPlantarse");
+  const botonReinicioContenedor = document.getElementById("botonReinicio");
   if (
     botonDarCartaContenedor &&
     botonDarCartaContenedor instanceof HTMLButtonElement &&
     botonPlantarseContenedor &&
-    botonPlantarseContenedor instanceof HTMLButtonElement
+    botonPlantarseContenedor instanceof HTMLButtonElement &&
+    botonReinicioContenedor &&
+    botonReinicioContenedor instanceof HTMLButtonElement
   ) {
     botonDarCartaContenedor.disabled = false;
     botonPlantarseContenedor.disabled = false;
+    botonReinicioContenedor.disabled = true;
   }
 };
 
@@ -151,7 +167,7 @@ const pintarMensajePantalla = (puntuacion: number) => {
   }
 };
 
-const plantarse = (puntuacion: number) => {
+const mostrarEstado = (puntuacion: number) => {
   const mensajeFinal = document.getElementById("mensaje");
   if (mensajeFinal !== null) {
     if (puntuacion >= 0.5 && puntuacion <= 4) {
@@ -171,6 +187,7 @@ const plantarse = (puntuacion: number) => {
 };
 const reinicio = () => {
   puntuacion = 0;
+  document.getElementById("puntuacion")!.innerHTML = `${puntuacion}`;
   habilitarBotones();
   muestraCarta();
   pintarMensajePantalla(puntuacion);
@@ -195,21 +212,24 @@ const cargarEventos = () => {
     botonPlantarse !== undefined &&
     botonPlantarse instanceof HTMLButtonElement
   ) {
-    botonPlantarse.addEventListener("click", () => plantarse(puntuacion));
+    botonPlantarse.addEventListener("click", () => {
+      mostrarEstado(puntuacion);
+      activarReinicio();
+    });
   } else {
     console.error("error al plantarte");
   }
 
   const botonReinicio = document.getElementById("botonReinicio");
-
   if (
     botonReinicio !== null &&
     botonReinicio !== undefined &&
     botonReinicio instanceof HTMLButtonElement
   ) {
+    botonReinicio.disabled = true;
     botonReinicio.addEventListener("click", reinicio);
   } else {
-    console.error("error al plantarte");
+    console.error("Error al inicializar el botón de reinicio");
   }
 };
 
