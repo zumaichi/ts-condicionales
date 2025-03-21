@@ -89,6 +89,14 @@ const pedirCarta = () => {
     deshabilitarBotones();
   }
 };
+const anularReinicio = () => {
+  const botonReinicioContenedor = document.getElementById("botonReinicio");
+  if (
+    botonReinicioContenedor &&
+    botonReinicioContenedor instanceof HTMLButtonElement
+  )
+    botonReinicioContenedor.disabled;
+};
 const activarReinicio = () => {
   const botonReinicioContenedor = document.getElementById("botonReinicio");
   if (
@@ -132,7 +140,16 @@ const habilitarBotones = () => {
     botonReinicioContenedor.disabled = true;
   }
 };
-
+const activarSguir = () => {
+  const botonSguirContenedor = document.getElementById("botonSeguir");
+  if (botonSguirContenedor && botonSguirContenedor instanceof HTMLButtonElement)
+    botonSguirContenedor.disabled = false;
+};
+const desactivarSguir = () => {
+  const botonSguirContenedor = document.getElementById("botonSeguir");
+  if (botonSguirContenedor && botonSguirContenedor instanceof HTMLButtonElement)
+    botonSguirContenedor.disabled = true;
+};
 const obtenerMensaje = (puntuacion: number): string => {
   let mensaje = "";
   if (puntuacion >= 0.5 && puntuacion <= 4) {
@@ -191,9 +208,23 @@ const reinicio = () => {
   habilitarBotones();
   muestraCarta();
   pintarMensajePantalla(puntuacion);
+  desactivarSguir();
 };
 
 const cargarEventos = () => {
+  const botonSeguir = document.getElementById("botonSeguir");
+
+  if (
+    botonSeguir !== null &&
+    botonSeguir !== undefined &&
+    botonSeguir instanceof HTMLButtonElement
+  ) {
+    botonSeguir.disabled = true;
+    botonSeguir.addEventListener("click", pedirCarta);
+  } else {
+    console.error("error al seguir");
+  }
+
   const botonDarCarta = document.getElementById("botonDarCarta");
 
   if (
@@ -215,6 +246,8 @@ const cargarEventos = () => {
     botonPlantarse.addEventListener("click", () => {
       mostrarEstado(puntuacion);
       activarReinicio();
+      activarSguir();
+      deshabilitarBotones();
     });
   } else {
     console.error("error al plantarte");
@@ -227,7 +260,10 @@ const cargarEventos = () => {
     botonReinicio instanceof HTMLButtonElement
   ) {
     botonReinicio.disabled = true;
-    botonReinicio.addEventListener("click", reinicio);
+    botonReinicio.addEventListener("click", () => {
+      reinicio();
+      anularReinicio();
+    });
   } else {
     console.error("Error al inicializar el botón de reinicio");
   }
