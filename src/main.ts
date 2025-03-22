@@ -82,10 +82,10 @@ const pedirCarta = () => {
 
   muestraCarta(valorUrlCarta);
   console.log("puntuacion: ", puntuacion);
-  pintarMensajePantalla(puntuacion);
+  mostrarEstado(puntuacion);
 
   if (puntuacion >= 7.5) {
-    pintarMensajePantalla(puntuacion);
+    mostrarEstado(puntuacion);
     deshabilitarBotones();
   }
 };
@@ -150,39 +150,6 @@ const desactivarSguir = () => {
   if (botonSguirContenedor && botonSguirContenedor instanceof HTMLButtonElement)
     botonSguirContenedor.disabled = true;
 };
-const obtenerMensaje = (puntuacion: number): string => {
-  let mensaje = "";
-  if (puntuacion >= 0.5 && puntuacion <= 4) {
-    mensaje = "Has sido muy conservador.";
-  } else if (puntuacion === 5) {
-    mensaje = "Te ha entrado el canguelo eh?";
-  } else if (puntuacion >= 6 && puntuacion < 7.5) {
-    mensaje = "Casi casi...";
-  } else if (puntuacion === 7.5) {
-    mensaje = "¡Lo has clavado! ¡Enhorabuena!";
-  } else if (puntuacion > 7.5) {
-    mensaje = "Game Over";
-  } else if (puntuacion === 0) {
-    mensaje = "¡pulsa dame cata para empezar!";
-  }
-
-  return mensaje;
-};
-
-const pintarMensajePantalla = (puntuacion: number) => {
-  const mensajeContenedor = document.getElementById("mensaje");
-
-  if (
-    mensajeContenedor !== null &&
-    mensajeContenedor !== undefined &&
-    mensajeContenedor instanceof HTMLDivElement
-  ) {
-    const mensaje = obtenerMensaje(puntuacion);
-    mensajeContenedor.textContent = mensaje;
-  } else {
-    console.error("No se ha encontrado el contenedor de mensaje");
-  }
-};
 
 const mostrarEstado = (puntuacion: number) => {
   const mensajeFinal = document.getElementById("mensaje");
@@ -207,7 +174,7 @@ const reinicio = () => {
   document.getElementById("puntuacion")!.innerHTML = `${puntuacion}`;
   habilitarBotones();
   muestraCarta();
-  pintarMensajePantalla(puntuacion);
+  mostrarEstado(puntuacion);
   desactivarSguir();
 };
 
@@ -220,7 +187,10 @@ const cargarEventos = () => {
     botonSeguir instanceof HTMLButtonElement
   ) {
     botonSeguir.disabled = true;
-    botonSeguir.addEventListener("click", pedirCarta);
+
+    botonSeguir.addEventListener("click", () => {
+      pedirCarta();
+    });
   } else {
     console.error("error al seguir");
   }
@@ -272,5 +242,4 @@ const cargarEventos = () => {
 document.addEventListener("DOMContentLoaded", () => {
   cargarEventos();
   muestraCarta();
-  pintarMensajePantalla(puntuacion);
 });
