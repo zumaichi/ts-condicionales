@@ -72,23 +72,6 @@ const aumentarPuntuacion = (valor: number) => {
   }
 };
 
-const pedirCarta = () => {
-  const numeroAleatorio = calcularNumeroAleatorio();
-
-  const valorNuevaCarta = obtenerValorCarta(numeroAleatorio);
-  aumentarPuntuacion(valorNuevaCarta);
-
-  const valorUrlCarta = obtenerValorUrlCarta(numeroAleatorio);
-
-  muestraCarta(valorUrlCarta);
-  console.log("puntuacion: ", puntuacion);
-  mostrarEstado(puntuacion);
-
-  if (puntuacion >= 7.5) {
-    mostrarEstado(puntuacion);
-    deshabilitarBotones();
-  }
-};
 const anularReinicio = () => {
   const botonReinicioContenedor = document.getElementById("botonReinicio");
   if (
@@ -169,12 +152,27 @@ const mostrarEstado = (puntuacion: number) => {
     }
   }
 };
+const pedirCarta = () => {
+  const numeroAleatorio = calcularNumeroAleatorio();
+
+  const valorNuevaCarta = obtenerValorCarta(numeroAleatorio);
+  aumentarPuntuacion(valorNuevaCarta);
+
+  const valorUrlCarta = obtenerValorUrlCarta(numeroAleatorio);
+
+  muestraCarta(valorUrlCarta);
+  console.log("puntuacion: ", puntuacion);
+
+  if (puntuacion >= 7.5) {
+    mostrarEstado(puntuacion);
+    deshabilitarBotones();
+  }
+};
 const reinicio = () => {
   puntuacion = 0;
   document.getElementById("puntuacion")!.innerHTML = `${puntuacion}`;
   habilitarBotones();
   muestraCarta();
-  mostrarEstado(puntuacion);
   desactivarSguir();
 };
 
@@ -214,10 +212,10 @@ const cargarEventos = () => {
     botonPlantarse instanceof HTMLButtonElement
   ) {
     botonPlantarse.addEventListener("click", () => {
-      mostrarEstado(puntuacion);
       activarReinicio();
       activarSguir();
       deshabilitarBotones();
+      mostrarEstado(puntuacion);
     });
   } else {
     console.error("error al plantarte");
@@ -233,6 +231,7 @@ const cargarEventos = () => {
     botonReinicio.addEventListener("click", () => {
       reinicio();
       anularReinicio();
+      mostrarEstado(puntuacion);
     });
   } else {
     console.error("Error al inicializar el botón de reinicio");
