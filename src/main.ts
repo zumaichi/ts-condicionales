@@ -139,7 +139,7 @@ const mostrarEstado = (puntuacion: number) => {
   if (mensajeFinal !== null) {
     if (puntuacion >= 0.5 && puntuacion <= 4) {
       mensajeFinal.innerHTML = "Has sido muy conservador.";
-    } else if (puntuacion === 5) {
+    } else if (puntuacion >= 5 && puntuacion < 6) {
       mensajeFinal.innerHTML = "Te ha entrado el canguelo eh?";
     } else if (puntuacion >= 6 && puntuacion < 7.5) {
       mensajeFinal.innerHTML = "Casi casi...";
